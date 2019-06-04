@@ -1,7 +1,10 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-const searches = require("./routes/api/searches");
+const cors = require('cors');
+const cookieParser = require('cookie-parser');
+const artists = require("./routes/api/artists");
+const spotify_auth = require("./routes/api/spotify_auth");
 
 const app = express();
 const db = require('./config/keys').mongoURI;
@@ -12,7 +15,10 @@ mongoose
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
-app.use("/api/searches", searches);
+app.use(cors())
+app.use(cookieParser());
+app.use("/api/artists", artists);
+app.use("/api/spotify_auth", spotify_auth);
 
 const port = process.env.PORT || 5000;
 
