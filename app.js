@@ -15,7 +15,7 @@ mongoose
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
-app.use(cors())
+app.use(cors());
 app.use(cookieParser());
 app.use("/api/artists", artists);
 app.use("/api/spotify_auth", spotify_auth);

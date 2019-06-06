@@ -1,11 +1,12 @@
 import * as APIUtil from '../util/search_api_util'
 
-export const RECEIVE_ARTIST_SEARCH_RESULTS = "RECEIVE_ARTIST_SEARCH_RESULTS";
-export const START_LOADING_ARTIST_SEARCH_RESULTS = "START_LOADING_ARTIST_SEARCH_RESULTS";
-export const RECEIVE_ARTIST_SEARCH_ERRORS = "RECEIVE_ARTIST_SEARCH_ERRORS";
-export const RECEIVE_ARTIST_DETAIL_ERRORS = "RECEIVE_ARTIST_DETAIL_ERRORS";
-export const START_LOADING_ARTIST_DETAIL = "START_LOADING_ARTIST_DETAIL";
-export const RECEIVE_ARTIST_DETAIL = "RECEIVE_ARTIST_DETAIL";
+export const  RECEIVE_ARTIST_SEARCH_RESULTS = "RECEIVE_ARTIST_SEARCH_RESULTS",
+              START_LOADING_ARTIST_SEARCH_RESULTS = "START_LOADING_ARTIST_SEARCH_RESULTS",
+              RECEIVE_ARTIST_SEARCH_ERRORS = "RECEIVE_ARTIST_SEARCH_ERRORS",
+              RECEIVE_ARTIST_DETAIL_ERRORS = "RECEIVE_ARTIST_DETAIL_ERRORS",
+              START_LOADING_ARTIST_DETAIL = "START_LOADING_ARTIST_DETAIL",
+              RECEIVE_ARTIST_DETAIL = "RECEIVE_ARTIST_DETAIL",
+              RECEIVE_ALBUMS_INFO = "RECEIVE_ALBUMS_INFO";
 
 const receiveArtistSearchResults = ({data}) => ({
   type: RECEIVE_ARTIST_SEARCH_RESULTS,
@@ -34,6 +35,11 @@ const receiveArtistDetailErrors = errors => ({
   type: RECEIVE_ARTIST_DETAIL_ERRORS,
   errors
 })
+
+const receiveAlbumsInfo = ({data}) => ({
+  type: RECEIVE_ALBUMS_INFO,
+  data
+})
 //async
 
 export const searchArtist = query => dispatch => {
@@ -48,4 +54,23 @@ export const getArtistDetail = artistLink => dispatch => {
   APIUtil.getArtistDetail(artistLink)
     .then(data => dispatch(receiveArtistDetail(data)))
     .catch(err => receiveArtistDetailErrors(err));
+}
+
+export const getPitchforkAlbumReviewsForSongs = songs => dispatch => {
+  const albums = getAlbumsFromSongs(songs);
+  APIUtil.getPitchforkAlbumReviewsForSongs(albums)
+    .then(pitchforkAlbumsInfo => dispatch(receiveAlbumsInfo(pitchforkAlbumsInfo)))
+}
+
+const getAlbumsFromSongs = songs => {
+  let albums = {};
+  songs.forEach(song => {
+    const albumInfo = {};
+    albumInfo.artistName = song.album.artists[0].name;
+    albumInfo.artistId = song.album.artists[0].id;
+    albumInfo.albumTitle = song.album.name;
+    albumInfo.albumId = song.album.id;
+    albums[albumInfo.albumId] = albumInfo;
+  })
+  return albums;
 }

@@ -28,4 +28,11 @@ router.get("/detail", (req, res) => {
     .catch(errors => res.status(400).json(errors));
 })
 
+router.post('/details', (req, res) => {
+  svc.scrapePitchforkAlbumSearches(req.body)
+    .then(albumsInfo => res.json(albumsInfo))
+    .catch(errors => res.status(400).json(errors));
+})
+
+
 module.exports = router;

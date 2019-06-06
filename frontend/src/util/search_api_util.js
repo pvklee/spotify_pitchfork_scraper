@@ -7,3 +7,7 @@ export const searchArtist = query => (
 export const getArtistDetail = artistLink => (
   axios.get('/api/artists/detail', {params: {artistLink}})
 )
+
+export const getPitchforkAlbumReviewsForSongs = albums => (
+  axios.post('/api/artists/details', albums)
+)

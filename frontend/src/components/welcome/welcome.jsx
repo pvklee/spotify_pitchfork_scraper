@@ -8,7 +8,7 @@ class Welcome extends React.Component {
 
   render(){
     return(
-      <Redirect to="/artists"/>
+      <Redirect to="/recommended_tracks"/>
     )
   }
 }
