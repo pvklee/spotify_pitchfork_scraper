@@ -5,9 +5,12 @@ export default ({spotifyData, pitchforkData}) => {
   const artist = spotifyData.artists[0].name;
   const albumName = spotifyData.album.name;
   const albumId = spotifyData.album.id;
-  const pitchforkAlbumName = pitchforkData[albumId] ? pitchforkData[albumId].titles[0] : null;
-  const albumScore = pitchforkData[albumId] ? pitchforkData[albumId].scores[0] : null;
-  const albumAbstract = pitchforkData[albumId] ? pitchforkData[albumId].abstract : null;
+  const albumArt = spotifyData.album.images[0].url;
+  const pitchforkAlbumName = pitchforkData.title;
+  const albumScore = pitchforkData.score;
+  const albumAbstract = pitchforkData.abstract;
+  const albumBody = pitchforkData.body;
+  const pitchforkUrl = "https://pitchfork.com" + pitchforkData.link;
   return(
     <div>
       <div>
@@ -16,10 +19,13 @@ export default ({spotifyData, pitchforkData}) => {
           <li>{artist}</li>
           <li>{albumName}</li>
           <li>{albumId}</li>
+          <li><img src={albumArt}/></li>
           <li><h2>Pitchfork Info</h2></li>
           <li>Title: {pitchforkAlbumName}</li>
           <li>Score: {albumScore}</li>
           <li>Abstract: {albumAbstract}</li>
+          <li>Body: {albumBody}</li>
+          <li><a href={pitchforkUrl}>Link</a></li>
         </ul>
       </div>
     </div>

@@ -1,9 +1,8 @@
 import {
   RECEIVE_RECENTLY_PLAYED_SONGS,
   RECEIVE_SAVED_ALBUMS,
-  RECEIVE_PLAYLISTS,
   RECEIVE_RECOMMENDATIONS
-} from '../actions/spotify_actions';
+} from '../../actions/spotify_actions';
 import merge from 'lodash/merge';
 
 const _initialState = {
@@ -34,8 +33,7 @@ export default (state = _initialState, action) => {
       return newState;
     case RECEIVE_RECOMMENDATIONS:
       newState = merge({}, newState, {
-        recommendations: action.recommendations.data.tracks,
-        seeds: action.recommendations.data.seeds
+        recommendations: action.recommendations
       });
       return newState;
     default:

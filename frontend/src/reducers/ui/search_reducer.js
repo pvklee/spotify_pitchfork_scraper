@@ -1,6 +1,6 @@
 import {
   RECEIVE_ARTIST_SEARCH_RESULTS
-} from '../actions/artists_actions';
+} from '../../actions/pitchfork_actions';
 import merge from 'lodash/merge'
 
 const initialState = {

@@ -1,5 +1,7 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
+const stringSimilarity = require('string-similarity');
+
 
 const scrapePitchforkArtistSearch = (query) => (
   axios.get(`https://pitchfork.com/search/?query=${query}`)
@@ -78,13 +80,14 @@ const scrapePitchforkArtistDetail = artistLink => {
     }))
 }
 
-const scrapePitchforkAlbumSearches = albums => {
-  let albumsArray = Object.values(albums);
+const scrapePitchforkAlbumSearches = albumsArray => {
+
   pitchforkAlbumsInfo = albumsArray.map(album => ({[album.albumId] : {}}));
   let albumsWithReviews = [];
-
-  const albumSearchesAxios = albumsArray.map(album => {
-    const query = encodeURI(album.artistName + " " + album.albumTitle.split(/[\(\[]/)[0]);
+  
+  const albumSearchesAxios = albumsArray.map((album, index) => {
+    albumsArray[index].albumTitle = albumsArray[index].albumTitle.split(/ [\(\[]/)[0];
+    const query = encodeURI(album.artistName + " " + album.albumTitle);
     return axios.get(`https://pitchfork.com/search/?query=${query}`)
   });
   
@@ -94,12 +97,32 @@ const scrapePitchforkAlbumSearches = albums => {
         if(response.status === 200) {
           const html = response.data;
           const $ = cheerio.load(html);
-          const reviewLink = $('.review__link')[0] ? $('.review__link')[0].attribs.href : null;
-          albumsArray[index]['link'] = reviewLink;
-          if(reviewLink) {albumsWithReviews.push({albumId: albumsArray[index].albumId, link: reviewLink, titles: [], years: [], scores: [], albumArtUrls: []})};
+          let reviewResults = {};
+          $('#result-albumreviews .review__link').each(function() {
+            const pArtist = $(this).find('.review__title-artist').text();
+            const pAlbum = $(this).find('.review__title-album').text();
+            const link = $(this).attr('href');
+            
+            reviewResults[pArtist + " " + pAlbum] = link;
+          });
+          let reviewLink = null;
+          const resultsToCompare = Object.keys(reviewResults);
+          if(resultsToCompare.length === 1){
+            reviewLink = reviewResults[resultsToCompare[0]];
+          } else if(resultsToCompare.length > 1){
+            const actualArtistAlbum = albumsArray[index].artistName + " " + albumsArray[index].albumTitle;
+            const match = stringSimilarity.findBestMatch(actualArtistAlbum, resultsToCompare);
+            reviewLink = reviewResults[match.bestMatch.target];
+          }
+          if(reviewLink) {
+            albumsWithReviews.push({
+              albumId: albumsArray[index].albumId,
+              link: reviewLink,
+              spotifyTitle: albumsArray[index].albumTitle
+            })
+          };
         }
       })
-      
       const reviewLinksAxios = albumsWithReviews.map(album => axios.get(`https://pitchfork.com` + album.link));
       return reviewLinksAxios;
     }))
@@ -109,23 +132,36 @@ const scrapePitchforkAlbumSearches = albums => {
         if(response.status === 200) {
           const html = response.data;
           const $ = cheerio.load(html);
-          $('.single-album-tombstone__review-title').each(function() {
-            albumsWithReviews[index].titles.push($(this).text());
+          let listedAlbums = {};
+          $('.single-album-tombstone').each(function() {
+            const title = $(this).find('.single-album-tombstone__review-title').text(),
+                  year = $(this).find('.single-album-tombstone__meta-year').text().split(" ").pop(),
+                  score = $(this).find('.score').text(),
+                  albumArtUrl = $(this).find('.single-album-tombstone__art img').attr('src')
+            listedAlbums[title] = {
+              title,
+              year,
+              score,
+              albumArtUrl
+            }
           })
-          $('.single-album-tombstone__meta-year').each(function() {
-            albumsWithReviews[index].years.push($(this).text().split(" ").pop());
-          })
-          $('.score').each(function() {
-            albumsWithReviews[index].scores.push($(this).text());
-          });
-          $('.single-album-tombstone__art').each(function() {
-            albumsWithReviews[index].albumArtUrls.push($(this).find('img').attr('src'));
-          })
+
+          const titlesToCompare = Object.keys(listedAlbums);
+          if(titlesToCompare.length === 1){
+            albumsWithReviews[index] = {...albumsWithReviews[index], ...listedAlbums[titlesToCompare[0]]}
+          } else if (titlesToCompare.length > 1){
+            const actualTitle = albumsWithReviews[index].spotifyTitle;
+            const match = stringSimilarity.findBestMatch(actualTitle, titlesToCompare);
+            albumsWithReviews[index] = {...albumsWithReviews[index], ...listedAlbums[match.bestMatch.target]}
+          }
           albumsWithReviews[index].abstract = $('.review-detail__abstract').text();
-          albumsWithReviews[index].body = $('.review-detail__text .contents').text();
+          const body = $('.review-detail__text .contents p').map(function() {
+            return $(this).text();
+          });
+          albumsWithReviews[index].body = body.get().join('\n\n');
+
         }
       })
-
       const albumsInfo = {};
       albumsWithReviews.forEach(album => (albumsInfo[album.albumId] = album));
       return albumsInfo;

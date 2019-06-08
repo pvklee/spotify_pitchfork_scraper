@@ -1,7 +1,7 @@
 import {
   RECEIVE_ARTIST_DETAIL,
   RECEIVE_ALBUMS_INFO
-} from '../actions/artists_actions';
+} from '../../actions/pitchfork_actions';
 import merge from 'lodash/merge';
 
 const initialState = {
@@ -17,7 +17,6 @@ export default function(state = initialState, action) {
       newState = merge({}, newState, {artistsInfo: action.data});
       return newState;
     case RECEIVE_ALBUMS_INFO:
-      debugger;
       newState = merge({}, state, {albumsInfo: action.data});
       return newState;
     default:

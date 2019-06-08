@@ -7,7 +7,6 @@ import SearchResults from './search_results';
 export default class Search extends React.Component {
 
   componentDidMount(){
-    this.props.getRecentlyPlayedSongs();
     // this.props.getSavedAlbums();
     // this.props.getPlaylists();
   }
