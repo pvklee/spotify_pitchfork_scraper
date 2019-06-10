@@ -21,7 +21,7 @@ export default class SpotifyLogin extends React.Component {
             </p>
           </div>
           <div>
-            <a href="http://localhost:5000/api/spotify_auth/login">
+            <a href="https://spotify-pitchfork-scraper.herokuapp.com/api/spotify_auth/login">
               <div className="spotify-login-button">
                 Login to Spotify
               </div>
