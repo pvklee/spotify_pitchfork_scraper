@@ -7,14 +7,8 @@ const artists = require("./routes/api/artists");
 const spotify_auth = require("./routes/api/spotify_auth");
 const path = require('path');
 
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static('frontend/build'));
-  app.get('/', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
-  })
-}
-
 const app = express();
+
 const db = require('./config/keys').mongoURI;
 mongoose
   .connect(db, {useNewUrlParser: true})
@@ -27,6 +21,13 @@ app.use(cors());
 app.use(cookieParser());
 app.use("/api/artists", artists);
 app.use("/api/spotify_auth", spotify_auth);
+
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static('frontend/build'));
+  app.get('/', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
+  })
+}
 
 const port = process.env.PORT || 5000;
 
