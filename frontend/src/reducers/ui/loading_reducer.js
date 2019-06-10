@@ -2,7 +2,7 @@ import {
   START_LOADING_ARTIST_SEARCH_RESULTS,
   RECEIVE_ARTIST_SEARCH_RESULTS,
   START_LOADING_ALBUM_REVIEWS,
-  FINISHED_LOADING_ALBUM_REVIEWS
+  FINISHED_LOADING_ALBUM_REVIEWS,
 } from '../../actions/pitchfork_actions';
 import merge from 'lodash/merge'
 

@@ -1,0 +1,49 @@
+.review{
+  height: 100%;
+  overflow: scroll;
+}
+
+.review h1{
+  font-weight: 900;
+  font-size: 30px;
+}
+
+.review-content{
+}
+
+.review-score{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 3px solid black;
+  width: 40px;
+  height: 40px;
+  font-weight: 700;
+  font-size: 18pt;
+  border-radius: 50%;
+}
+
+.review-header{
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid gray;
+  width: 100%;
+  transition: background-color .5s;
+}
+
+.review-header:hover{
+  background-color: lightblue;
+  transition: background-color .1s;
+}
+
+.review-title-author{
+  width: 95%;
+}
+
+.review-abstract{
+  margin-bottom: 18px;
+}
+
+.review-body p{
+  margin-bottom: 14px;
+}

@@ -1,0 +1,25 @@
+.recommended-tracks{
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 100%;
+}
+
+.recommended-tracks-loading{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.spotify-player{
+  padding: 20px;
+  width: 40%;
+}
+
+.pitchfork-review-container{
+  padding: 20px;
+  width: 60%;
+  height: 90%;
+}

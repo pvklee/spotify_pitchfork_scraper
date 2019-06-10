@@ -1,14 +1,37 @@
 import React from 'react';
+import {Redirect} from 'react-router-dom';
 import SpotifyPlayerContainer from '../spotify_player/spotify_player_container'
 import PitchforkReview from '../pitchfork_review/pitchfork_review'
+import LoadingSpinner from '../ui/loading_spinner'
+import './recommended_tracks.css'
+
 export default class RecommendedTracks extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      loading: true
+    }
+    this.finishLoading = this.finishLoading.bind(this);
+  }
+
   componentDidMount(){
-    this.props.refreshSpotifyToken(this.props.refresh_token)
-      .then(() => this.props.getRecommendationsFromRecentlyPlayedSongs())
+    if(this.props.refresh_token){
+      this.props.refreshSpotifyToken(this.props.refresh_token)
+        .then(() => this.props.getRecommendationsFromRecentlyPlayedSongs())
+    }
+  }
+
+  finishLoading(){ 
+    this.setState({loading: false});
   }
 
   render(){
-    const {currentTrackId, albumsInfo, queue, currentAlbumName} = this.props;
+    const {currentTrackId, albumsInfo, queue, currentAlbumName, refresh_token} = this.props;
+
+    if(!refresh_token){
+      return <Redirect to="/spotify_login" />
+    }
+
     let currentAlbumId = null;
     if (queue[currentTrackId])
       currentAlbumId = queue[currentTrackId].album.id;
@@ -21,10 +44,23 @@ export default class RecommendedTracks extends React.Component {
       })
     }
     const currentAlbumInfo = (currentAlbumId && albumsInfo) ? albumsInfo[currentAlbumId] : null;
-    return(
-      <div>
-        <SpotifyPlayerContainer />
+    
+    const pitchforkReview = 
+      <div className="pitchfork-review">
         <PitchforkReview currentAlbumInfo={currentAlbumInfo}/>
+      </div>
+    
+    const loading = 
+      <div className="recommended-tracks-loading">
+        <LoadingSpinner />
+      </div>
+    return(
+      <div className="recommended-tracks">
+        {this.state.loading ? loading : null}
+        <div className={this.state.loading ? "" : "spotify-player"}>
+          <SpotifyPlayerContainer finishLoading={this.finishLoading}/>
+        </div>
+        {this.state.loading ? null : pitchforkReview}
       </div>
     )
   }

@@ -1,9 +1,23 @@
+.loading-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 40px;
+  font-weight: 700;
+  width: 100%;
+}
+
+.loading-text{
+  margin-bottom: 20px;
+}
+
 .loader {
-  border: 8px solid #f3f3f3; /* Light grey */
-  border-top: 8px solid #3498db; /* Blue */
+  border: 16px solid #f3f3f3; /* Light grey */
+  border-top: 16px solid #34db42;
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  width: 80px;
+  height: 80px;
   animation: spin 1s linear infinite;
 }
 

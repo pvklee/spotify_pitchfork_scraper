@@ -2,12 +2,9 @@ import {connect} from 'react-redux';
 import SpotifyLogin from './spotify_login'
 
 const mapStateToProps = state => ({
-})
-
-const mapDispatchToProps = dispatch => ({
+  access_token: state.session.access_token
 })
 
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+  mapStateToProps
 )(SpotifyLogin)

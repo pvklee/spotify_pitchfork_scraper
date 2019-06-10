@@ -1,6 +1,7 @@
 import React from 'react';
-export default class SpotifyPlayer extends React.Component {
+import './spotify_player.css'
 
+export default class SpotifyPlayer extends React.Component {
   constructor(props){
     super(props);
     this.state = {
@@ -19,16 +20,9 @@ export default class SpotifyPlayer extends React.Component {
     this.onPlayClick = this.onPlayClick.bind(this);
     this.onNextClick = this.onNextClick.bind(this);
   }
+
   componentDidMount(){
     this.playerCheckInterval = setInterval(() => this.checkForPlayer(), 100);
-  }
-
-  componentDidUpdate(prevProps){
-    if(this.props.queue.length !== 0 && prevProps.queuePosition !== this.props.queuePosition){
-      this.setState({queuedSongLoading: true});
-      const trackUri = this.props.queue[this.props.queuePosition].uri;
-      this.props.setPlaybackToNewSong(trackUri);
-    }
   }
 
   checkForPlayer(){
@@ -79,8 +73,10 @@ export default class SpotifyPlayer extends React.Component {
           albumArtUrl,
           playing
         });
-      } else if (this.props.firstSong === state.track_window.current_track.name){
+        console.log(state);
+      } else if (!state.paused){
         this.setState({playbackReady: true});
+        this.props.finishLoading();
       }
     }
   }
@@ -126,16 +122,18 @@ export default class SpotifyPlayer extends React.Component {
   render(){
     if(!this.state.playbackReady) {return null};
     return(
-      <div>
-        <div>
+      <div className="spotify-player-container">
+        <div className="spotify-player-header">
           <h1>{this.state.trackName}</h1>
-          <h2>{this.state.albumName}</h2>
+          <h2>{this.state.artistName}</h2>
+        </div>
+        <div className="spotify-album-art">
           <img src={this.state.albumArtUrl} alt="albumart"/>
         </div>
-        <div>
-          <button onClick={this.onPrevClick}>Previous</button>
-          <button onClick={this.onPlayClick}>{this.state.playing ? 'Pause' : 'Play'}</button>
-          <button onClick={this.onNextClick}>Next</button>
+        <div className="spotify-player-controls">
+          <button className="spotify-button" onClick={this.onPrevClick}>Previous</button>
+          <button className="spotify-button" onClick={this.onPlayClick}>{this.state.playing ? 'Pause' : 'Play'}</button>
+          <button className="spotify-button" onClick={this.onNextClick}>Next</button>
         </div>
       </div>
     )
