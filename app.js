@@ -5,6 +5,14 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const artists = require("./routes/api/artists");
 const spotify_auth = require("./routes/api/spotify_auth");
+const path = require('path');
+
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static('frontend/build'));
+  app.get('/', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
+  })
+}
 
 const app = express();
 const db = require('./config/keys').mongoURI;

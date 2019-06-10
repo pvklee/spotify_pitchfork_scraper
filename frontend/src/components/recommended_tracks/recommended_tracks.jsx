@@ -46,7 +46,7 @@ export default class RecommendedTracks extends React.Component {
     const currentAlbumInfo = (currentAlbumId && albumsInfo) ? albumsInfo[currentAlbumId] : null;
     
     const pitchforkReview = 
-      <div className="pitchfork-review">
+      <div className="pitchfork-review-container">
         <PitchforkReview currentAlbumInfo={currentAlbumInfo}/>
       </div>
     
