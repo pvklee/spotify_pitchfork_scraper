@@ -2,8 +2,6 @@
 
 ![screenshot](https://raw.githubusercontent.com/pvklee/spotify_pitchfork_scraper/master/readme_images/Screen%20Shot%202019-06-13%20at%2010.50.47%20AM.png)
 
-A SoundCloud clone built with React, Redux, and Express. A space to share and discover new music.
-
 Scrapes album reviews from Pitchfork.com for your Spotify recommendations, and displays reviews while song is playing in an online player.
 
 [Link to live site](https://spotify-pitchfork-scraper.herokuapp.com/) 
