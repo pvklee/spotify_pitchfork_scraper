@@ -15,7 +15,7 @@ For the frontend, I used React for the single-page application UI and Redux for 
 ## Highlighted features
 
 * Developed custom web scraping pipeline with Axios and the Cheerio library.
-* Devised string manipulation paradigm and implemented pre-existing string-similarity library to ensure accurate web scraping results.
-* Authenticates users and obtains user-specific Spotify data using Spotify Web API.
+* Implemented string-similarity library to ensure accurate web scraping results.
+* Authenticates users and obtains user-specific Spotify data using Spotify Web API OAuth.
 * Wrote custom algorithm to find top played artists for use as Spotify recommendation seeds.
 * Seamless, dynamic, single page application with React for scraped data and Spotify Web Playback SDK.
